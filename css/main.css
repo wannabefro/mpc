@@ -223,6 +223,10 @@ Helper classes
   }
 }
 
+body {
+  text-align: center;
+}
+
 #mpc {
   width: 80%;
   max-width: 640px;
@@ -257,3 +261,6 @@ Helper classes
   left: 0;
 }
 
+.hidden {
+  display: none;
+}

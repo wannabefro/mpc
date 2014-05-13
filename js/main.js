@@ -1,27 +1,29 @@
-var audio = [
-  'kick',
-  'snare',
-  'clap',
+var tracks = [
   'hiHat',
-  'kick2',
-  'snare2',
-  'snaps',
+  'clap',
+  'snare',
+  'kick',
   'openHiHat',
-  'hiTom',
-  'midTom',
-  'lowTom',
+  'snaps',
+  'snare2',
+  'kick2',
   'shaker',
-  'longScratch',
-  'shortScratch',
+  'lowTom',
+  'midTom',
+  'hiTom',
+  'crash',
   'ride',
-  'crash'
+  'shortScratch',
+  'longScratch'
 ];
 
 window.AudioContext = window.AudioContext||window.webkitAudioContext;
 var audioContext = new AudioContext();
 var bufferLoader;
+var submix;
 
 (function(){
+  drawPads();
   loadAudio();
   $('#mpc').on('click', function(e) {
     if ($(e.target).is("span")) {
@@ -36,29 +38,47 @@ var bufferLoader;
     var track = keys[e.keyCode];
     window[track].play();
   });
+  $('.toggle').on('click', function(e) {
+    var currentPage = $('.toggle').text();
+    $('#mpc').toggleClass('hidden');
+    $('#mixer').toggleClass('hidden');
+    var newPage = currentPage === 'Mixer' ? 'MPC' : 'Mixer';
+    $('.toggle').text(newPage);
+  });
 }());
 
 function Track(name, buffer) {
   this.track = name;
   this.buffer = buffer;
+  this.output = audioContext.createGain();
+  this.output.connect(submix);
 };
 
 Track.prototype.play = function(){
   var source = audioContext.createBufferSource();
   source.buffer = this.buffer;
-  source.connect(audioContext.destination);
+  source.connect(this.output);
   source.start(0);
 };
 
+function drawPads() {
+  tracks.forEach(function(name) {
+    var key = _.invert(keys)[name];
+    $('#mpc').prepend('<div id="' + name + '"><span class="pad-text">' + String.fromCharCode(key) + '</span></div>');
+  });
+}
+
 function getAudioFiles() {
   var soundFiles = [];
-  audio.forEach(function(name){
+  tracks.forEach(function(name){
     soundFiles.push('../audio/' + name + '.ogg')
   });
   return soundFiles;
 }
 
 function loadAudio() {
+  submix = audioContext.createGain();
+  submix.connect(audioContext.destination);
   bufferLoader = new BufferLoader(
     audioContext,
     getAudioFiles(),

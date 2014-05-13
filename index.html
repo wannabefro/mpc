@@ -20,27 +20,18 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
+        <button class="toggle">Mixer</button>
         <div id="mpc">
-          <div id="longScratch"><span class="pad-text">1</span></div>
-          <div id="shortScratch"><span class="pad-text">2</span></div>
-          <div id="ride"><span class="pad-text">3</span></div>
-          <div id="crash"><span class="pad-text">4</span></div>
-          <div id="hiTom"><span class="pad-text">Q</span></div>
-          <div id="midTom"><span class="pad-text">W</span></div>
-          <div id="lowTom"><span class="pad-text">E</span></div>
-          <div id="shaker"><span class="pad-text">R</span></div>
-          <div id="kick2"><span class="pad-text">A</span></div>
-          <div id="snare2"><span class="pad-text">S</span></div>
-          <div id="snaps"><span class="pad-text">D</span></div>
-          <div id="openHiHat"><span class="pad-text">F</span></div>
-          <div id="kick"><span class="pad-text">Z</span></div>
-          <div id="snare"><span class="pad-text">X</span></div>
-          <div id="clap"><span class="pad-text">C</span></div>
-          <div id="hiHat"><span class="pad-text">V</span></div>
         </div>
+
+        <div id="mixer" class="hidden">
+          <p>I'm the mixer</p>
+        </div>
+
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.0.min.js"><\/script>')</script>
 
+        <script src="js/vendor/underscore.min.js"></script>
         <script src="js/plugins.js"></script>
         <script src="js/buffer-loader.js"></script>
         <script src="js/keys.js"></script>
