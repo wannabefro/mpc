@@ -16,6 +16,9 @@ var tracks = [
   'shortScratch',
   'longScratch'
 ];
+var audioLoaded = new Event('audioLoaded');
+
+window.addEventListener('audioLoaded', drawMixer, false);
 
 window.AudioContext = window.AudioContext||window.webkitAudioContext;
 var audioContext = new AudioContext();
@@ -66,6 +69,18 @@ function drawPads() {
     var key = _.invert(keys)[name];
     $('#mpc').prepend('<div id="' + name + '"><span class="pad-text">' + String.fromCharCode(key) + '</span></div>');
   });
+}
+
+function drawMixer() {
+  tracks.forEach(function(name) {
+    $('#mixer').prepend('<div data-track="' + name + '" class="strip"><input type="range" class="fader" value=1 min=0 max=1 step=0.01></input></br><span class="label">' + name + '</span></div>');
+  });
+  $('#mixer input[type=range]').on('change', changeVolume);
+}
+
+function changeVolume(e) {
+  var track = $(e.target).parent().attr('data-track');
+  window[track].output.gain.value = e.target.value;
 }
 
 function getAudioFiles() {

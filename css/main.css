@@ -261,6 +261,23 @@ body {
   left: 0;
 }
 
+#mixer {
+  margin: 0 auto;
+  width: 80%;
+  max-width: 640px;
+}
+
+#mixer div{
+  float: left;
+  width: 25%;
+}
+
+.fader {
+  -webkit-appearance: slider-vertical;
+  width: 20px;
+  height: 100px;
+}
+
 .hidden {
   display: none;
 }
