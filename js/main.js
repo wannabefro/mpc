@@ -16,6 +16,7 @@ var tracks = [
   'shortScratch',
   'longScratch'
 ];
+var soloedCount = 0;
 var audioLoaded = new Event('audioLoaded');
 
 window.addEventListener('audioLoaded', drawMixer, false);
@@ -74,9 +75,10 @@ function drawPads() {
 function drawMixer() {
   tracks.forEach(function(name) {
     var html = [
-      '<div data-track="' + name + '" class="strip">',
+      '<div data-track="' + name + '" class="strip" data-muted=false data-soloed=false>',
       '<input type="range" class="fader" value=1 min=0 max=1 step=0.01></input></br>',
-      '<button class="mute" data-muted=false>Mute</button></br>',
+      '<button class="mute">Mute</button></br>',
+      '<button class="solo">Solo</button></br>',
       '<span class="label">' + name + '</span>',
       '</div>'
     ].join('\n');
@@ -84,6 +86,7 @@ function drawMixer() {
   });
   $('#mixer input[type=range]').on('change', changeVolume);
   $('.mute').on('mousedown', mute);
+  $('.solo').on('mousedown', solo);
 }
 
 function changeVolume(e) {
@@ -91,15 +94,31 @@ function changeVolume(e) {
   window[track].output.gain.value = e.target.value;
 }
 
+function solo(e) {
+  var $parent = $(e.target).parent();
+  var soloed = ($parent.attr('data-soloed') === "true");
+  $parent.attr('data-soloed', !soloed);
+  if (!soloed) {
+    soloedCount += 1;
+  }
+  $('[data-soloed=false]').each(function(){
+    var track = $(this).attr('data-track');
+    window[track].output.gain.value = 0;
+  });
+}
+
 function mute(e) {
-  var muted = ($(e.target).attr('data-muted') === "true");
-  $(e.target).attr('data-muted', !muted);
-  var track = $(e.target).parent().attr('data-track');
-  var fader = $(e.target).parent().find('.fader');
+  var $parent = $(e.target).parent();
+  var muted = ($parent.attr('data-muted') === "true");
+  $parent.attr('data-muted', !muted);
+  var track = $parent.attr('data-track');
+  var fader = $parent.find('.fader');
   if (!muted) {
     window[track].output.gain.value = 0;
+    $(e.target).css({'color': 'red'});
   } else {
     window[track].output.gain.value = fader.val();
+    $(e.target).css({'color': 'black'});
   }
 }
 
