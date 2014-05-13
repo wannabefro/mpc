@@ -32,6 +32,10 @@ var bufferLoader;
     var track = pad.attr('id');
     window[track].play();
   });
+  $(document).on('keydown', function(e) {
+    var track = keys[e.keyCode];
+    window[track].play();
+  });
 }());
 
 function Track(name, buffer) {
