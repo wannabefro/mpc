@@ -73,14 +73,34 @@ function drawPads() {
 
 function drawMixer() {
   tracks.forEach(function(name) {
-    $('#mixer').prepend('<div data-track="' + name + '" class="strip"><input type="range" class="fader" value=1 min=0 max=1 step=0.01></input></br><span class="label">' + name + '</span></div>');
+    var html = [
+      '<div data-track="' + name + '" class="strip">',
+      '<input type="range" class="fader" value=1 min=0 max=1 step=0.01></input></br>',
+      '<button class="mute" data-muted=false>Mute</button></br>',
+      '<span class="label">' + name + '</span>',
+      '</div>'
+    ].join('\n');
+    $('#mixer').prepend(html);
   });
   $('#mixer input[type=range]').on('change', changeVolume);
+  $('.mute').on('mousedown', mute);
 }
 
 function changeVolume(e) {
   var track = $(e.target).parent().attr('data-track');
   window[track].output.gain.value = e.target.value;
+}
+
+function mute(e) {
+  var muted = ($(e.target).attr('data-muted') === "true");
+  $(e.target).attr('data-muted', !muted);
+  var track = $(e.target).parent().attr('data-track');
+  var fader = $(e.target).parent().find('.fader');
+  if (!muted) {
+    window[track].output.gain.value = 0;
+  } else {
+    window[track].output.gain.value = fader.val();
+  }
 }
 
 function getAudioFiles() {
