@@ -14,6 +14,21 @@ Track.prototype.play = function() {
   this.source.start(0);
 };
 
+Track.clear = function() {
+  tracks.forEach(function(track) {
+    track.unmute();track.unsolo()
+  });
+}
+
+Track.reset = function() {
+  Track.clear();
+  tracks.forEach(function(track) {
+    track.source = null;
+    track.output.gain.value = 1;
+    $('#channel-'+track.track+' .fader').val(1);
+  });
+}
+
 Track.prototype.mute = function() {
   if (!this.muted) {
     this.muted = true;
