@@ -36,7 +36,7 @@ function drawPads() {
 function drawMixer() {
   tracks.forEach(function(name) {
     var html = [
-      '<div data-track="' + name + '" id="channel-' + name + '" class="strip" data-muted=false data-soloed=false>',
+      '<div data-track="' + name + '" id="channel-' + name + '" class="strip">',
       '<input type="range" class="fader" value=1 min=0 max=1 step=0.01></input></br>',
       '<button class="mute">Mute</button></br>',
       '<button class="solo">Solo</button></br>',
@@ -57,24 +57,18 @@ function changeVolume(e) {
 
 function solo(e) {
   var $parent = $(e.target).parent();
-  var soloed = ($parent.attr('data-soloed') === "true");
-  $parent.attr('data-soloed', !soloed);
-  if (!soloed) {
-    soloedCount += 1;
+  var track = $(this).attr('data-track');
+  if (!window[track].soloed) {
+    window[track].solo();
+  } else {
   }
-  $('[data-soloed=false]').each(function(){
-    var track = $(this).attr('data-track');
-    window[track].mute();
-  });
 }
 
 function mute(e) {
   var $parent = $(e.target).parent();
-  var muted = ($parent.attr('data-muted') === "true");
-  $parent.attr('data-muted', !muted);
   var track = $parent.attr('data-track');
   var fader = $parent.find('.fader');
-  if (!muted) {
+  if (!window[track].muted) {
     window[track].mute();
   } else {
     window[track].unmute(fader.val());

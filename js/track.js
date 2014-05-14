@@ -27,3 +27,10 @@ Track.prototype.unmute = function(volume) {
     this.output.gain.value = volume || 1;
   }
 }
+
+Track.prototype.solo = function() {
+  if (!this.soloed) {
+    $('#channel-'+this.track+' .solo').css({'color': 'yellow'});
+    debugger;
+  }
+}
