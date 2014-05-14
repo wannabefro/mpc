@@ -1,4 +1,4 @@
-var tracks = [
+var trackNames = [
   'hiHat',
   'clap',
   'snare',
@@ -16,6 +16,9 @@ var tracks = [
   'shortScratch',
   'longScratch'
 ];
+
+var tracks = [];
+
 var soloedCount = 0;
 var audioLoaded = new Event('audioLoaded');
 
@@ -27,14 +30,14 @@ var bufferLoader;
 var submix;
 
 function drawPads() {
-  tracks.forEach(function(name) {
+  trackNames.forEach(function(name) {
     var key = _.invert(keys)[name];
     $('#mpc').prepend('<div id="' + name + '"><span class="pad-text">' + String.fromCharCode(key) + '</span></div>');
   });
 }
 
 function drawMixer() {
-  tracks.forEach(function(name) {
+  trackNames.forEach(function(name) {
     var html = [
       '<div data-track="' + name + '" id="channel-' + name + '" class="strip">',
       '<input type="range" class="fader" value=1 min=0 max=1 step=0.01></input></br>',
@@ -57,10 +60,11 @@ function changeVolume(e) {
 
 function solo(e) {
   var $parent = $(e.target).parent();
-  var track = $(this).attr('data-track');
+  var track = $parent.attr('data-track');
   if (!window[track].soloed) {
     window[track].solo();
   } else {
+    window[track].unsolo();
   }
 }
 
@@ -77,7 +81,7 @@ function mute(e) {
 
 function getAudioFiles() {
   var soundFiles = [];
-  tracks.forEach(function(name){
+  trackNames.forEach(function(name){
     soundFiles.push('../audio/' + name + '.ogg')
   });
   return soundFiles;
@@ -98,6 +102,7 @@ function loadAudio() {
 function finishedLoading(bufferList){
   for(var i=0;i<bufferList.length;i++){
     window[bufferList[i].name] = new Track(bufferList[i].name, bufferList[i]);
+    tracks.push(window[bufferList[i].name]);
   }
   window.dispatchEvent(audioLoaded);
 }
