@@ -79,9 +79,9 @@ function mute(e) {
   }
 }
 
-function getAudioFiles() {
+function getAudioFiles(audio) {
   var soundFiles = [];
-  trackNames.forEach(function(name){
+  audio.forEach(function(name){
     soundFiles.push('../audio/' + name + '.ogg')
   });
   return soundFiles;
@@ -92,7 +92,7 @@ function loadAudio() {
   submix.connect(audioContext.destination);
   bufferLoader = new BufferLoader(
     audioContext,
-    getAudioFiles(),
+    getAudioFiles(trackNames),
     finishedLoading
   );
 
@@ -122,6 +122,12 @@ function finishedLoading(bufferList){
   $(document).on('keydown', function(e) {
     var track = keys[e.keyCode];
     window[track].play();
+  });
+  $('#clear').on('click', function() {
+    Track.clear();
+  });
+  $('#reset').on('click', function() {
+    Track.reset();
   });
   $('.toggle').on('click', function(e) {
     var currentPage = $('.toggle').text();
