@@ -41,6 +41,7 @@ function drawMixer() {
     var html = [
       '<div data-track="' + name + '" id="channel-' + name + '" class="strip">',
       '<input type="range" class="fader" value=1 min=0 max=1 step=0.01></input></br>',
+      '<input type="range" class="pan" value=0 min=-1 max=1 step="any"></input></br>',
       '<button class="mute">Mute</button></br>',
       '<button class="solo">Solo</button></br>',
       '<span class="label">' + name + '</span>',
@@ -48,7 +49,8 @@ function drawMixer() {
     ].join('\n');
     $('#mixer').prepend(html);
   });
-  $('#mixer input[type=range]').on('change', changeVolume);
+  $('#mixer .fader').on('change', changeVolume);
+  $('#mixer .pan').on('change', changePan);
   $('.mute').on('mousedown', mute);
   $('.solo').on('mousedown', solo);
 }
@@ -56,6 +58,11 @@ function drawMixer() {
 function changeVolume(e) {
   var track = $(e.target).parent().attr('data-track');
   window[track].output.gain.value = e.target.value;
+}
+
+function changePan(e) {
+  var track = $(e.target).parent().attr('data-track');
+  window[track].pan(e.target.value);
 }
 
 function solo(e) {
