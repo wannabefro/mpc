@@ -5,7 +5,7 @@ function Track(name, buffer) {
   this.muted = false;
   this.output = audioContext.createGain();
   this.panner = audioContext.createPanner();
-  this.panner.panningModel = 'equalpower';
+  this.panner.panningModel = "equalpower";
   this.output.connect(this.panner);
   this.panner.connect(submix);
 };
