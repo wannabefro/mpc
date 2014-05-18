@@ -5,6 +5,7 @@ function Track(name, buffer) {
   this.muted = false;
   this.output = audioContext.createGain();
   this.panner = audioContext.createPanner();
+  this.panner.panningModel = 'equalpower';
   this.output.connect(this.panner);
   this.panner.connect(submix);
 };
@@ -61,6 +62,13 @@ Track.prototype.solo = function() {
       track.mute();
     });
   }
+}
+
+Track.prototype.pan = function(amount) {
+  var x = amount,
+      y = 0,
+      z = 1 - Math.abs(x);
+  this.panner.setPosition(x, y, z);
 }
 
 Track.prototype.unsolo = function() {
