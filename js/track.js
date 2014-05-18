@@ -4,7 +4,9 @@ function Track(name, buffer) {
   this.soloed = false;
   this.muted = false;
   this.output = audioContext.createGain();
-  this.output.connect(submix);
+  this.panner = audioContext.createPanner();
+  this.output.connect(this.panner);
+  this.panner.connect(submix);
 };
 
 Track.prototype.play = function() {
