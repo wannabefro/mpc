@@ -30,6 +30,7 @@ Track.reset = function() {
     track.output.gain.value = 1;
     track.panner.setPosition(0, 0, 0);
     $('#channel-'+track.track+' .fader').val(1);
+    $('#channel-'+track.track+' .pan').val(0);
   });
 }
 
