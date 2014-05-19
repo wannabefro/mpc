@@ -17,17 +17,26 @@ var trackNames = [
   'longScratch'
 ];
 
+var extras = [
+  'click'
+];
+
 var tracks = [];
 
 var soloedCount = 0;
 var audioLoaded = new Event('audioLoaded');
+var metronomeInterval;
 
 window.addEventListener('audioLoaded', drawMixer, false);
+window.addEventListener('tempoChanged', updateTempo, false);
 
 window.AudioContext = window.AudioContext||window.webkitAudioContext;
 var audioContext = new AudioContext();
+var submix = audioContext.createGain();
+submix.connect(audioContext.destination);
 var bufferLoader;
 var submix;
+var tempo = 120;
 
 function drawPads() {
   trackNames.forEach(function(name) {
@@ -53,6 +62,10 @@ function drawMixer() {
   $('#mixer .pan').on('change', changePan);
   $('.mute').on('mousedown', mute);
   $('.solo').on('mousedown', solo);
+}
+
+function updateTempo() {
+  $('#tempo').html('<p>' + tempo + 'bpm</p>');
 }
 
 function changeVolume(e) {
@@ -95,14 +108,21 @@ function getAudioFiles(audio) {
 }
 
 function loadAudio() {
-  submix = audioContext.createGain();
-  submix.connect(audioContext.destination);
   bufferLoader = new BufferLoader(
     audioContext,
     getAudioFiles(trackNames),
     finishedLoading
   );
+  window.dispatchEvent(audioLoaded);
+  bufferLoader.load();
+}
 
+function loadExtras() {
+  bufferLoader = new BufferLoader(
+    audioContext,
+    getAudioFiles(extras),
+    finishedLoading
+  );
   bufferLoader.load();
 }
 
@@ -111,12 +131,32 @@ function finishedLoading(bufferList){
     window[bufferList[i].name] = new Track(bufferList[i].name, bufferList[i]);
     tracks.push(window[bufferList[i].name]);
   }
-  window.dispatchEvent(audioLoaded);
+}
+
+function metronome() {
+  this.playing = !this.playing;
+  var beat = (60 / tempo);
+  if (this.playing) {
+    this.interval = setInterval(function() {
+      click.play();
+    }, 500);
+  } else {
+    clearInterval(this.interval);
+  }
+}
+
+function changePage() {
+  var currentPage = $('.toggle').text();
+  $('#mpc').toggleClass('hidden');
+  $('#mixer').toggleClass('hidden');
+  var newPage = currentPage === 'Mixer' ? 'MPC' : 'Mixer';
+  $('.toggle').text(newPage);
 }
 
 (function(){
   drawPads();
   loadAudio();
+  loadExtras();
   $('#mpc').on('click', function(e) {
     if ($(e.target).is("span")) {
       var pad = $(e.target).parent();
@@ -136,11 +176,6 @@ function finishedLoading(bufferList){
   $('#reset').on('click', function() {
     Track.reset();
   });
-  $('.toggle').on('click', function(e) {
-    var currentPage = $('.toggle').text();
-    $('#mpc').toggleClass('hidden');
-    $('#mixer').toggleClass('hidden');
-    var newPage = currentPage === 'Mixer' ? 'MPC' : 'Mixer';
-    $('.toggle').text(newPage);
-  });
+  $('.toggle').on('click', changePage);
+  $('#metronome').on('click', metronome);
 }());
