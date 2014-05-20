@@ -134,7 +134,8 @@ function finishedLoading(bufferList){
 }
 
 function metronome() {
-  play(click);
+  this.isPlaying = !this.isPlaying;
+  play(click, this.isPlaying);
 }
 
 function changePage() {

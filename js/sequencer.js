@@ -34,8 +34,7 @@ function scheduleNote(beatNumber, time, track) {
   track.play(time);
 }
 
-function play(track) {
-  var isPlaying = !isPlaying;
+function play(track, isPlaying) {
   if (isPlaying) {
     current16thNote = 0;
     nextNoteTime = audioContext.currentTime;
@@ -43,6 +42,7 @@ function play(track) {
     return "stop";
   } else {
     window.clearTimeout(timerID);
+    window.clearTimeout(timerID + 1);
     return "play";
   }
 }
