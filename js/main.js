@@ -134,15 +134,7 @@ function finishedLoading(bufferList){
 }
 
 function metronome() {
-  this.playing = !this.playing;
-  var beat = (60 / tempo);
-  if (this.playing) {
-    this.interval = setInterval(function() {
-      click.play();
-    }, 500);
-  } else {
-    clearInterval(this.interval);
-  }
+  play(click);
 }
 
 function changePage() {
@@ -178,4 +170,5 @@ function changePage() {
   });
   $('.toggle').on('click', changePage);
   $('#metronome').on('click', metronome);
+  requestAnimFrame(queue);
 }());

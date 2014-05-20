@@ -10,11 +10,12 @@ function Track(name, buffer) {
   this.panner.connect(submix);
 };
 
-Track.prototype.play = function() {
+Track.prototype.play = function(startTime) {
+  startTime = startTime || 0;
   this.source = audioContext.createBufferSource();
   this.source.buffer = this.buffer;
   this.source.connect(this.output);
-  this.source.start(0);
+  this.source.start(startTime);
 };
 
 Track.clear = function() {
